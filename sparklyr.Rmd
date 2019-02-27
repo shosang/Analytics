@@ -1,0 +1,29 @@
+---
+title: "sparklyr"
+author: "Stephanie Hosang"
+date: "February 26, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(sparklyr)
+```
+
+Connect to local Spark cluster. 
+Remote requires URL and port.
+```{r}
+spark_conn <- spark_connect(master="local")
+
+```
+
+
+```{r}
+
+```
+
+
+Disconnect Spark
+```{r}
+spark_disconnect(conn)
+```
+

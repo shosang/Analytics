@@ -6,13 +6,13 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(igraph)
 ```
 
 Template to plot some simple networks
 
 Template 1
-```{r, echo=FALSE}
+```{r}
 g1 <- graph( edges=c("O","Z", "N","S", "O","K", "O","M", "M","N", "Z","M", "N","O"), directed=F)
 V(g1)$shape <- "circle"
 plot(g1, edge.label = E(g1)$weight, edge.label.font=c(2), edge.label.size=60, 
@@ -22,7 +22,7 @@ plot(g1, edge.label = E(g1)$weight, edge.label.font=c(2), edge.label.size=60,
 ```
 
 Template 2
-```{r, echo=FALSE}
+```{r}
 g2 <- graph.empty(n=0,directed=F)
 g2 <- g2 + vertex("A", color="blue")
 g2 <- g2 + vertex("B", color="yellow")
