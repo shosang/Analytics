@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(sparklyr)
+spark_install()
 ```
 
 Connect to local Spark cluster. 
@@ -16,10 +17,70 @@ spark_conn <- spark_connect(master="local")
 
 ```
 
-
+Copy df to Spark and list dataframes available in connection
 ```{r}
+df <- copy_to(spark_conn, df)
+src_tbls(spark_conn)
+```
+
+View dataframe schema
+```{r}
+schema <- sdf_schema(track_metadata_tbl)
+
+schema %>%
+  lapply(function(x) do.call(df, x)) %>%
+  bind_rows()
+```
+
+Create a 1% sample of the data and store in spark
+```{r}
+df %>%
+  sdf_sample(fraction=0.1,replacement=FALSE,seed=100) %>%
+  compute("sample")
+```
+
+Partition to test and train
+```{r}
+df %>%
+  sdf_partition(training = 0.7, testing = 0.3)
 
 ```
+
+
+
+Print 10 rows of df and all columns
+```{r}
+print(df, n=10, width=Inf)
+```
+
+Compute and store intermediate results within spark - store as "tmp_spark"
+```{r}
+df %>%
+  filter(...) %>%
+  select(...) %>%
+  compute("tmp_spark")
+```
+
+
+Pass data from Spark to R
+```{r}
+df %>%
+  collect()
+```
+
+Notes:
+
+Sample feature transformation in R:
+1. df %>% ft_binarizer(in, out, threshold) - turns a continuous variable into logical (y/n)
+2. sparklyr and tidytext integrate well together for text mining
+
+Test how long code takes to run
+```{r}
+microbenchmark(
+  {code}
+)
+```
+
 
 
 Disconnect Spark
